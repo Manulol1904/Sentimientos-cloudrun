@@ -1,10 +1,12 @@
-from flask import Flask, render_template, request
+from flask import Flask, render_template, request, send_file
 import pandas as pd
 import os
 from sentiment import predict
 from text_utils import clean_text
 
 app = Flask(__name__)
+
+OUTPUT_FILE = "resultado.xlsx"
 
 @app.route('/')
 def home():
@@ -24,10 +26,26 @@ def analyze():
 
     df["clasificacion"] = results
 
-    output_path = "resultado.xlsx"
-    df.to_excel(output_path, index=False)
+    # Guardar archivo
+    df.to_excel(OUTPUT_FILE, index=False)
 
-    return render_template("result.html", table=df.head().to_html(), file_ready=True)
+    # Conteo para gráfica
+    counts = df["clasificacion"].value_counts().to_dict()
+
+    normal = counts.get("normal", 0)
+    regular = counts.get("regular", 0)
+    toxico = counts.get("toxico", 0)
+
+    return render_template(
+        "result.html",
+        normal=normal,
+        regular=regular,
+        toxico=toxico
+    )
+
+@app.route('/download')
+def download():
+    return send_file(OUTPUT_FILE, as_attachment=True)
 
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 8080))
