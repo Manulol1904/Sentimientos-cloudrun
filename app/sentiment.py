@@ -41,15 +41,12 @@ model.compile(
     metrics=['accuracy']
 )
 
-model.fit(padded, labels, epochs=40, verbose=0)
+model.fit(padded, labels, epochs=60, verbose=0)
 
 label_map = {0: "normal", 1: "regular", 2: "toxico"}
 
-def predict_batch(texts):
-    texts = [str(t) if t is not None else "" for t in texts]
-
-    seq = tokenizer.texts_to_sequences(texts)
+def predict(text):
+    seq = tokenizer.texts_to_sequences([text])
     pad = pad_sequences(seq, maxlen=12, padding='post')
-    predictions = model.predict(pad, verbose=0)
-
-    return [label_map[np.argmax(p)] for p in predictions]
+    prediction = model.predict(pad, verbose=0)
+    return label_map[np.argmax(prediction)]

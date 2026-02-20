@@ -1,7 +1,7 @@
 from flask import Flask, render_template, request, send_file
 import pandas as pd
 import os
-from sentiment import predict_batch
+from sentiment import predict
 from text_utils import clean_text
 
 app = Flask(__name__)
@@ -19,8 +19,10 @@ def analyze():
 
     comments = df.iloc[:,0].astype(str)
 
-    clean_comments = [clean_text(c) for c in comments]
-    results = predict_batch(clean_comments)
+    results = []
+    for comment in comments:
+        clean = clean_text(comment)
+        results.append(predict(clean))
 
     df["clasificacion"] = results
 
