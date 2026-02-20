@@ -1,7 +1,7 @@
 from flask import Flask, render_template, request, send_file
 import pandas as pd
 import os
-from sentiment import predict_batch
+from sentiment import predict
 from text_utils import clean_text
 
 app = Flask(__name__)
@@ -19,16 +19,17 @@ def analyze():
 
     comments = df.iloc[:,0].astype(str)
 
-    # Limpieza en batch
-    clean_comments = [clean_text(c) for c in comments]
-
-    # 🔥 UNA sola predicción
-    results = predict_batch(clean_comments)
+    results = []
+    for comment in comments:
+        clean = clean_text(comment)
+        results.append(predict(clean))
 
     df["clasificacion"] = results
 
+    # Guardar archivo
     df.to_excel(OUTPUT_FILE, index=False)
 
+    # Conteo para gráfica
     counts = df["clasificacion"].value_counts().to_dict()
 
     normal = counts.get("normal", 0)

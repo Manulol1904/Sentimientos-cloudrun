@@ -41,14 +41,12 @@ model.compile(
     metrics=['accuracy']
 )
 
-# 🔥 Entrenar UNA sola vez cuando el contenedor inicia
 model.fit(padded, labels, epochs=40, verbose=0)
 
 label_map = {0: "normal", 1: "regular", 2: "toxico"}
 
-
-def predict_batch(texts):
-    sequences = tokenizer.texts_to_sequences(texts)
-    pads = pad_sequences(sequences, maxlen=12, padding='post')
-    predictions = model.predict(pads, verbose=0)
-    return [label_map[np.argmax(pred)] for pred in predictions]
+def predict(text):
+    seq = tokenizer.texts_to_sequences([text])
+    pad = pad_sequences(seq, maxlen=12, padding='post')
+    prediction = model.predict(pad, verbose=0)
+    return label_map[np.argmax(prediction)]
