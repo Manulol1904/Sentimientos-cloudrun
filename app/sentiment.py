@@ -42,7 +42,7 @@ model.compile(
 )
 
 # 🔥 Entrenar UNA sola vez cuando el contenedor inicia
-model.fit(padded, labels, epochs=20, verbose=0)
+model.fit(padded, labels, epochs=40, verbose=0)
 
 label_map = {0: "normal", 1: "regular", 2: "toxico"}
 
