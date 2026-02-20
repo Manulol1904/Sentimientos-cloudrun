@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Analisis de Sentimientos</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+    <h2>Sube tu archivo Excel</h2>
+    <form action="/analyze" method="post" enctype="multipart/form-data">
+        <input type="file" name="file" required>
+        <button type="submit">Analizar</button>
+    </form>
+</body>
+</html>
