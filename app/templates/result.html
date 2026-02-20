@@ -2,11 +2,45 @@
 <html>
 <head>
     <title>Resultados</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
 </head>
 <body>
-    <h2>Resultados del análisis</h2>
-    {{ table|safe }}
-    <br>
+
+<div class="container">
+    <h1>Resultados del Análisis</h1>
+
+    <canvas id="chart" width="400" height="200"></canvas>
+
+    <br><br>
+
+    <a href="/download">
+        <button>Descargar Excel Procesado</button>
+    </a>
+
+    <br><br>
     <a href="/">Volver</a>
+</div>
+
+<script>
+    const ctx = document.getElementById('chart');
+
+    new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: ['Normal', 'Regular', 'Tóxico'],
+            datasets: [{
+                label: 'Cantidad de comentarios',
+                data: [{{ normal }}, {{ regular }}, {{ toxico }}],
+                backgroundColor: [
+                    '#4CAF50',
+                    '#FFC107',
+                    '#F44336'
+                ]
+            }]
+        }
+    });
+</script>
+
 </body>
 </html>
